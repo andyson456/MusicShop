@@ -27,6 +27,11 @@ namespace MusicShop.Controllers
             return View(await _context.Recording.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerSearch()
+        {
+            return View(await _context.Recording.ToListAsync());
+        }
+
         // GET: Recordings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -56,7 +61,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Price")] Recording recording)
+        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Description,Price")] Recording recording)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +93,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Price")] Recording recording)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Description,Price")] Recording recording)
         {
             if (id != recording.Id)
             {

@@ -27,6 +27,11 @@ namespace MusicShop.Controllers
             return View(await _context.Drum.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerSearch()
+        {
+            return View(await _context.Drum.ToListAsync());
+        }
+
         // GET: Drums/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -56,7 +61,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,PercussionModel,Price")] Drum drum)
+        public async Task<IActionResult> Create([Bind("Id,Brand,PercussionModel,Description,Price")] Drum drum)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +93,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,PercussionModel,Price")] Drum drum)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,PercussionModel,Description,Price")] Drum drum)
         {
             if (id != drum.Id)
             {

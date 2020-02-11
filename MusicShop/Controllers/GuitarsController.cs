@@ -61,7 +61,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,ModelName,NumOfStrings,Price")] Guitar guitar)
+        public async Task<IActionResult> Create([Bind("Id,Brand,ModelName,NumOfStrings,Description,Price")] Guitar guitar)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +93,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,ModelName,NumOfStrings,Price")] Guitar guitar)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,ModelName,NumOfStrings,Description,Price")] Guitar guitar)
         {
             if (id != guitar.Id)
             {

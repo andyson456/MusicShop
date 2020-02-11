@@ -11,6 +11,7 @@ namespace MusicShop.Models
 		public string Brand { get; set; }
 		public string ModelName { get; set; }
 		public int NumOfStrings { get; set; }
+		public string Description { get; set; }
 		public decimal Price { get; set; }
 	}
 }

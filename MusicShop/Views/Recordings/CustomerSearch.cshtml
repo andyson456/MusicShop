@@ -1,14 +1,11 @@
-﻿@model IEnumerable<MusicShop.Models.Drum>
+﻿@model IEnumerable<MusicShop.Models.Recording>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "CustomerSearch";
 }
 
-<h1>Index</h1>
+<h1>Search Available Recording Gear</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -16,7 +13,7 @@
                 @Html.DisplayNameFor(model => model.Brand)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PercussionModel)
+                @Html.DisplayNameFor(model => model.Model)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -34,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.Brand)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PercussionModel)
+                @Html.DisplayFor(modelItem => item.Model)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
@@ -43,9 +40,9 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+               
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+              
             </td>
         </tr>
 }

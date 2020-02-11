@@ -27,6 +27,11 @@ namespace MusicShop.Controllers
             return View(await _context.Guitar.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerSearch()
+        {
+            return View(await _context.Guitar.ToListAsync());
+        }
+
         // GET: Guitars/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -7,7 +7,7 @@
             position: fixed;
             width: 200px;
             height: 800px;
-            background: #006064;
+            background: #DDD;
             color: #DDD;
             padding-bottom: 0px;
             padding: 0px;
@@ -34,14 +34,14 @@
 
     <div class='sidebar'>
         <ul>
-            <li>Home</li>
-            <li>Guitars</li>
-            <li>Drums</li>
-            <li>Recording Equipment</li>
+            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-controller="Guitars" asp-action="Index">Guitars</a></li>
+            <li><a asp-controller="Drums" asp-action="Index">Drums</a></li>
+            <li><a asp-controller="Recordings" asp-action="Index">Recording Equipment</a></li>
         </ul>
     </div>
 
-<div class="jumbotron" style="padding-left: 300px">
+<div class="jumbotron" style="padding-left: 500px">
     <h1>MyMusicShop</h1>
 </div>
 <div class="row" style="padding-left: 300px">

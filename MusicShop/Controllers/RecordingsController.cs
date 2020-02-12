@@ -27,9 +27,17 @@ namespace MusicShop.Controllers
             return View(await _context.Recording.ToListAsync());
         }
 
-        public async Task<IActionResult> CustomerSearch()
+        public async Task<IActionResult> CustomerSearch(string searchString)
         {
-            return View(await _context.Recording.ToListAsync());
+            var recordings = from r in _context.Recording select r;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recordings = recordings.Where(s => s.Brand.Contains(searchString) |
+                                         s.Model.Contains(searchString));
+            }
+
+            return View(await recordings.ToListAsync());
         }
 
         // GET: Recordings/Details/5

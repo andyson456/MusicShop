@@ -6,6 +6,13 @@
 
 <h1>Search Available Recording Gear</h1>
 
+<form asp-controller="Recordings" asp-action="CustomerSearch" method="get">
+    <p>
+        Title: <input type="text" name="SearchString">
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+
 <table class="table">
     <thead>
         <tr>

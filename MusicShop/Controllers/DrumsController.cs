@@ -27,9 +27,17 @@ namespace MusicShop.Controllers
             return View(await _context.Drum.ToListAsync());
         }
 
-        public async Task<IActionResult> CustomerSearch()
+        public async Task<IActionResult> CustomerSearch(string searchString)
         {
-            return View(await _context.Drum.ToListAsync());
+            var drums = from d in _context.Drum select d;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                drums = drums.Where(s => s.Brand.Contains(searchString) |
+                                         s.PercussionModel.Contains(searchString));
+            }
+
+            return View(await drums.ToListAsync());
         }
 
         // GET: Drums/Details/5

@@ -33,7 +33,8 @@ namespace MusicShop.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                guitars = guitars.Where(s => s.Brand.Contains(searchString));
+                guitars = guitars.Where(s => s.Brand.Contains(searchString) |
+                                             s.ModelName.Contains(searchString));
             }
 
             return View(await guitars.ToListAsync());

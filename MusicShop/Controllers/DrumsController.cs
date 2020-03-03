@@ -40,8 +40,42 @@ namespace MusicShop.Controllers
             return View(await drums.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var drum = await _context.Drum
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (drum == null)
+            {
+                return NotFound();
+            }
+
+            return View(drum);
+        }
+
         // GET: Drums/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var drum = await _context.Drum
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (drum == null)
+            {
+                return NotFound();
+            }
+
+            return View(drum);
+        }
+
+        public async Task<IActionResult> Cart(int? id)
         {
             if (id == null)
             {

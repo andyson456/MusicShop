@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicShop.Data;
 using MusicShop.Models;
+using MusicShop.ViewModels;
 
 namespace MusicShop.Controllers
 {
@@ -15,10 +18,12 @@ namespace MusicShop.Controllers
     public class DrumsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public DrumsController(ApplicationDbContext context)
+        public DrumsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Drums
@@ -103,15 +108,31 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,PercussionModel,Description,Price")] Drum drum)
+        public async Task<IActionResult> Create(DrumCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
+                string uniqueFileName = null;
+                if (model.Image != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+                Drum drum = new Drum
+                {
+                    Brand = model.Brand,
+                    PercussionModel = model.PercussionModel,
+                    Description = model.Description,
+                    Price = model.Price,
+                    ImagePath = uniqueFileName
+                };
                 _context.Add(drum);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = drum.Id });
             }
-            return View(drum);
+            return View();
         }
 
         // GET: Drums/Edit/5

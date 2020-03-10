@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MusicShop.Models
+namespace MusicShop.ViewModels
 {
-	public class Drum
+	public class DrumCreateViewModel
 	{
-		public int Id { get; set; }
 		public string Brand { get; set; }
 		public string PercussionModel { get; set; }
 		public string Description { get; set; }
 		public decimal Price { get; set; }
-		public string ImagePath { get; set; }
+		public IFormFile Image { get; set; }
 	}
 }

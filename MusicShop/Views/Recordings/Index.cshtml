@@ -29,6 +29,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var photoPath = "~/Images/" + item.ImagePath;
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
@@ -41,6 +42,11 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                <div class="card-body text-center">
+                    <img class="card-img-top" style="width:100px; height:100px" src="@photoPath" asp-append-version="true" />
+                </div>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

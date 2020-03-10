@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "CustomerDetails";
+    var photoPath = "~/Images/" + Model.ImagePath;
 }
 
 <h1>Guitar Details</h1>
@@ -40,12 +41,9 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImagePath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
-        </dd>
+        <div class="card-body text-center">
+            <img class="card-img-top" style="width:500px; height:500px" src="@photoPath" asp-append-version="true" />
+        </div>
     </dl>
 </div>
 <div>

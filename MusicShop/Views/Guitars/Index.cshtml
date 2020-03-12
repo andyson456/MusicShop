@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h2>Guitars</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Add A Guitar</a>
 </p>
 <table class="table">
     <thead>
@@ -22,6 +22,9 @@
                 @Html.DisplayNameFor(model => model.NumOfStrings)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
@@ -29,6 +32,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var photoPath = "~/Images/" + item.ImagePath;
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Brand)
@@ -40,8 +44,17 @@
                 @Html.DisplayFor(modelItem => item.NumOfStrings)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
+            <td>
+                <div class="card-body text-center">
+                    <img class="card-img-top" style="width:100px; height:100px" src="@photoPath" asp-append-version="true" />
+                </div>
+            </td>
+
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

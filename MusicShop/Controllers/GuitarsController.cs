@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicShop.Data;
 using MusicShop.Models;
+using MusicShop.ViewModels;
 
 namespace MusicShop.Controllers
 {
@@ -15,10 +19,13 @@ namespace MusicShop.Controllers
     public class GuitarsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public GuitarsController(ApplicationDbContext context)
+        [Obsolete]
+        public GuitarsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Guitars
@@ -27,8 +34,55 @@ namespace MusicShop.Controllers
             return View(await _context.Guitar.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerSearch(string searchString)
+        {
+            var guitars = from g in _context.Guitar select g;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                guitars = guitars.Where(s => s.Brand.Contains(searchString) |
+                                             s.ModelName.Contains(searchString));
+            }
+
+            return View(await guitars.ToListAsync());
+        }
+
+        public async Task<IActionResult> CustomerDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var guitar = await _context.Guitar
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (guitar == null)
+            {
+                return NotFound();
+            }
+
+            return View(guitar);
+        }
+
         // GET: Guitars/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var guitar = await _context.Guitar
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (guitar == null)
+            {
+                return NotFound();
+            }
+
+            return View(guitar);
+        }
+
+        public async Task<IActionResult> Cart(int? id)
         {
             if (id == null)
             {
@@ -56,15 +110,35 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,ModelName,NumOfStrings,Price")] Guitar guitar)
+        [Obsolete]
+        public async Task<IActionResult> Create(GuitarCreateViewModel model)
         {
+
             if (ModelState.IsValid)
             {
+                string uniqueFileName = null;
+                if (model.Image != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Image.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    model.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+                Guitar guitar = new Guitar
+                {
+                    Brand = model.Brand,
+                    ModelName = model.ModelName,
+                    NumOfStrings = model.NumOfStrings,
+                    Description = model.Description,
+                    Price = model.Price,
+                    ImagePath = uniqueFileName
+                };
+
                 _context.Add(guitar);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = guitar.Id });
             }
-            return View(guitar);
+            return View();
         }
 
         // GET: Guitars/Edit/5
@@ -88,7 +162,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,ModelName,NumOfStrings,Price")] Guitar guitar)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,ModelName,NumOfStrings,Description,Price")] Guitar guitar)
         {
             if (id != guitar.Id)
             {

@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MusicShop.Data;
 using MusicShop.Models;
+using MusicShop.ViewModels;
 
 namespace MusicShop.Controllers
 {
@@ -15,10 +18,12 @@ namespace MusicShop.Controllers
     public class RecordingsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public RecordingsController(ApplicationDbContext context)
+        public RecordingsController(ApplicationDbContext context, IHostingEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Recordings
@@ -27,8 +32,55 @@ namespace MusicShop.Controllers
             return View(await _context.Recording.ToListAsync());
         }
 
+        public async Task<IActionResult> CustomerSearch(string searchString)
+        {
+            var recordings = from r in _context.Recording select r;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                recordings = recordings.Where(s => s.Brand.Contains(searchString) |
+                                         s.Model.Contains(searchString));
+            }
+
+            return View(await recordings.ToListAsync());
+        }
+
+        public async Task<IActionResult> CustomerDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var recording = await _context.Recording
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (recording == null)
+            {
+                return NotFound();
+            }
+
+            return View(recording);
+        }
+
         // GET: Recordings/Details/5
         public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var recording = await _context.Recording
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (recording == null)
+            {
+                return NotFound();
+            }
+
+            return View(recording);
+        }
+
+        public async Task<IActionResult> Cart(int? id)
         {
             if (id == null)
             {
@@ -56,15 +108,32 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Brand,Model,Price")] Recording recording)
+        public async Task<IActionResult> Create(RecordingCreateViewModel recordingModel)
         {
             if (ModelState.IsValid)
             {
+                string uniqueFileName = null;
+                if (recordingModel.Image != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + recordingModel.Image.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    recordingModel.Image.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+                Recording recording = new Recording
+                {
+                    Brand = recordingModel.Brand,
+                    Model = recordingModel.Model,
+                    Description = recordingModel.Description,
+                    Price = recordingModel.Price,
+                    ImagePath = uniqueFileName
+                };
+
                 _context.Add(recording);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new { id = recording.Id });
             }
-            return View(recording);
+            return View();
         }
 
         // GET: Recordings/Edit/5
@@ -88,7 +157,7 @@ namespace MusicShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Price")] Recording recording)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,Description,Price")] Recording recording)
         {
             if (id != recording.Id)
             {

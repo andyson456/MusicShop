@@ -82,6 +82,23 @@ namespace MusicShop.Controllers
             return View(guitar);
         }
 
+        public async Task<IActionResult> Cart(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var guitar = await _context.Guitar
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (guitar == null)
+            {
+                return NotFound();
+            }
+
+            return View(guitar);
+        }
+
         // GET: Guitars/Create
         public IActionResult Create()
         {

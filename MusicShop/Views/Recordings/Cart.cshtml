@@ -1,4 +1,4 @@
-﻿@model MusicShop.Models.Drum
+﻿@model MusicShop.Models.Recording
 
 @{
     ViewData["Title"] = "Cart";
@@ -18,9 +18,9 @@
                 <span asp-validation-for="Brand" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PercussionModel" class="control-label"></label>
-                <input asp-for="PercussionModel" class="form-control" readonly="readonly"/>
-                <span asp-validation-for="PercussionModel" class="text-danger"></span>
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" readonly="readonly"/>
+                <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -42,4 +42,3 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-

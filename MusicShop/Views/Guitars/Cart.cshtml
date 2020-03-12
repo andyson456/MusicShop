@@ -1,4 +1,4 @@
-﻿@model MusicShop.Models.Drum
+﻿@model MusicShop.Models.Guitar
 
 @{
     ViewData["Title"] = "Cart";
@@ -14,13 +14,18 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Brand" class="control-label"></label>
-                <input asp-for="Brand" class="form-control" readonly="readonly"/>
+                <input asp-for="Brand" class="form-control" readonly="readonly" />
                 <span asp-validation-for="Brand" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PercussionModel" class="control-label"></label>
-                <input asp-for="PercussionModel" class="form-control" readonly="readonly"/>
-                <span asp-validation-for="PercussionModel" class="text-danger"></span>
+                <label asp-for="ModelName" class="control-label"></label>
+                <input asp-for="ModelName" class="form-control" readonly="readonly" />
+                <span asp-validation-for="ModelName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NumOfStrings" class="control-label"></label>
+                <input asp-for="NumOfStrings" class="form-control" readonly="readonly"/>
+                <span asp-validation-for="NumOfStrings" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

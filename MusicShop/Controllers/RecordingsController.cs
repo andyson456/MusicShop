@@ -80,6 +80,23 @@ namespace MusicShop.Controllers
             return View(recording);
         }
 
+        public async Task<IActionResult> Cart(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var recording = await _context.Recording
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (recording == null)
+            {
+                return NotFound();
+            }
+
+            return View(recording);
+        }
+
         // GET: Recordings/Create
         public IActionResult Create()
         {
